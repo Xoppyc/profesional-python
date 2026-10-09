@@ -1,0 +1,16 @@
+[BENCHMARK] run_analytics_suite executed in 0.4215 ms
+Indexed lookup UA2002: AccountRecord(account_number='UA2002', client_name='Maksym Polishchuk', balance=120000.0, account_type='deposit')
+Total: 415500.00 UAH | Average: 69250.00 UAH
+Top Account: UA2006 (150000.0 UAH)
+Grouped by account type:
+  - checking: 2 accounts
+  - deposit: 2 accounts
+  - savings: 1 accounts
+  - business: 1 accounts
+Rank 1: UA2006 (150000.0 UAH)
+
+--- Аналіз складності алгоритмів ---
+1. build_account_index: O(N) час, O(N) додаткова пам'ять
+2. find_account_by_number (dict index): O(1) середній час доступу за хеш-таблицею
+3. sort_accounts_by_balance: O(N log N) алгоритмом Timsort
+4. group_by_account_type: O(N) час побудови словника
