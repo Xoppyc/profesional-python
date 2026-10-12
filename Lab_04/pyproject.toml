@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bank-domain"
+version = "0.4.0"
+description = "Lab 04 - Advanced OOP and Type System for Banking"
+authors = [{ name = "Artem Kyrychenko", email = "zoom.2000v@gmail.com" }]
+requires-python = ">=3.12"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "mypy>=1.8.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
