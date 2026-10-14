@@ -1,0 +1,5 @@
+account_number,client,balance,operation,amount
+UA5001,Artem Kyrychenko,12000.0,deposit,3000.0
+UA5002,Olena Kovalenko,450.0,withdraw,100.0
+UA5003,Corrupted User,100.0,withdraw,500.0
+UA5004,Maksym Polishchuk,85000.0,deposit,15000.0

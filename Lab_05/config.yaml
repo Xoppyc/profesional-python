@@ -1,0 +1,16 @@
+app:
+  name: "ReliableBankImporter"
+  environment: "production"
+  strict_mode: false
+
+validation:
+  min_balance: 0.0
+  max_single_transfer: 1000000.0
+  allowed_operations:
+    - "deposit"
+    - "withdraw"
+
+paths:
+  input_csv: "data/accounts.csv"
+  output_json: "output/accounts_export.json"
+  log_file: "logs/importer.log"

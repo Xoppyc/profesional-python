@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "reliable-importer"
+version = "0.5.0"
+description = "Lab 05 - Reliable Banking Importer and Serializer"
+authors = [{ name = "Artem Kyrychenko", email = "zoom.2000v@gmail.com" }]
+requires-python = ">=3.12"
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
