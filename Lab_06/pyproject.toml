@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bank-test-suite"
+version = "0.6.0"
+description = "Lab 06 - Comprehensive Pytest Automation for Banking"
+authors = [{ name = "Artem Kyrychenko", email = "zoom.2000v@gmail.com" }]
+requires-python = ">=3.12"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --strict-markers"
