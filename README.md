@@ -1,16 +1,38 @@
-# Professional Python Course Laboratories
+# Bank Account Service — Lab 10 (Variant 4)
 
-Repository for university laboratory assignments in the «Professional Python» course.
-Student: Artem Kyrychenko (Variant 4 — Bank Account Management System).
+Production-ready Bank Account REST API and Double-Entry Transfer System, packaged as `bank-account-service`.
 
-## Content
-- `Lab_01` — Project setup, src-layout, models and unit tests
-- `Lab_02_Variant_4_Bank` — Data structures, collections, decorators, complexity analysis
-- `Lab_03` — Iterators, streaming pipeline, memory-efficient generators
-- `Lab_04` — Advanced OOP, Abstract Base Classes, Protocols, Generics
-- `Lab_05` — Error handling, YAML config, CSV streaming import, atomic JSON export
-- `Lab_06` — Comprehensive automated testing with pytest, fixtures, mocks, coverage
-- `Lab_07` — SQLite persistence, SQLAlchemy ORM, transactions, Alembic migrations
-- `Lab_08` — Asynchronous REST API with FastAPI, Pydantic, HTTPX client
-- `Lab_09` — Multiprocessing, threading synchronization, profiling, NumPy optimization
-- `Lab_10` — Production release, Docker container, GitHub Actions CI/CD pipeline
+## Features
+- **Client & Account Management**: Register clients, create savings/checking accounts with initial balances.
+- **Deposit & Withdrawal**: Validated financial operations strictly enforcing non-negative balances.
+- **Atomic Transfers**: Double-entry bookkeeping transfers between accounts with automatic rollback upon failure.
+- **Transaction Ledger**: Complete audit logging of all deposits, withdrawals, and transfers.
+- **Docker & CI/CD**: Multi-stage lightweight containerization and automated GitHub Actions verification.
+
+## Local Installation & Run
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+uvicorn bank_account_service.api:app --reload
+```
+
+Interactive API documentation available at `http://127.0.0.1:8000/docs`.
+
+## Docker Run
+```bash
+docker build -t bank-account-service:latest .
+docker run -p 8000:8000 bank-account-service:latest
+```
+
+## API Specification
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/health` | Healthcheck endpoint |
+| `POST` | `/clients` | Create new client |
+| `POST` | `/accounts` | Create account for client |
+| `GET` | `/accounts/{id}` | Retrieve account details |
+| `GET` | `/accounts/{id}/transactions` | Account transaction history |
+| `POST` | `/accounts/{id}/deposit` | Deposit funds |
+| `POST` | `/accounts/{id}/withdraw` | Withdraw funds |
+| `POST` | `/transfers` | Transfer funds atomically between accounts |
