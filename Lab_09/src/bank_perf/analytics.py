@@ -1,6 +1,8 @@
 from concurrent.futures import ProcessPoolExecutor
 from functools import lru_cache
+
 import numpy as np
+
 from bank_perf.dataset import AccountData
 
 
@@ -30,7 +32,9 @@ def calculate_total_multiprocess(accounts: list[AccountData], workers: int = 4) 
 
 
 @lru_cache(maxsize=128)
-def get_cached_account_metrics(dataset_hash: int, total_count: int, total_sum: float) -> dict[str, float]:
+def get_cached_account_metrics(
+    dataset_hash: int, total_count: int, total_sum: float
+) -> dict[str, float]:
     return {
         "count": float(total_count),
         "total_funds": total_sum,

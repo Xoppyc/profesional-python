@@ -1,11 +1,10 @@
-from logging.config import fileConfig
-from sqlalchemy import engine_from_config, pool
 from alembic import context
 from bank_storage.database import Base
-from bank_storage import models
+from sqlalchemy import engine_from_config, pool
 
 config = context.config
 target_metadata = Base.metadata
+
 
 def run_migrations_online() -> None:
     connectable = engine_from_config(
@@ -22,5 +21,6 @@ def run_migrations_online() -> None:
         )
         with context.begin_transaction():
             context.run_migrations()
+
 
 run_migrations_online()

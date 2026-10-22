@@ -1,5 +1,5 @@
+from bank_api.api import accounts_db, app, clients_db, transactions_db
 from fastapi.testclient import TestClient
-from bank_api.api import app, accounts_db, clients_db, transactions_db
 
 client = TestClient(app)
 
@@ -18,13 +18,19 @@ def test_health_check() -> None:
 
 def test_banking_api_lifecycle() -> None:
     # 1. Create Client
-    c_res = client.post("/clients", json={"full_name": "Artem Kyrychenko", "email": "zoom.2000v@gmail.com"})
+    c_res = client.post(
+        "/clients", json={"full_name": "Artem Kyrychenko", "email": "zoom.2000v@gmail.com"}
+    )
     assert c_res.status_code == 201
     c_id = c_res.json()["id"]
 
     # 2. Create Two Accounts
-    a1_res = client.post("/accounts", json={"account_number": "UA801", "client_id": c_id, "initial_balance": 1000.0})
-    a2_res = client.post("/accounts", json={"account_number": "UA802", "client_id": c_id, "initial_balance": 200.0})
+    a1_res = client.post(
+        "/accounts", json={"account_number": "UA801", "client_id": c_id, "initial_balance": 1000.0}
+    )
+    a2_res = client.post(
+        "/accounts", json={"account_number": "UA802", "client_id": c_id, "initial_balance": 200.0}
+    )
     assert a1_res.status_code == 201
     assert a2_res.status_code == 201
     a1_id = a1_res.json()["id"]
@@ -41,11 +47,16 @@ def test_banking_api_lifecycle() -> None:
     assert w_res.json()["balance"] == 1200.0
 
     # 5. Transfer
-    tx_res = client.post("/transfers", json={"source_account_id": a1_id, "target_account_id": a2_id, "amount": 400.0})
+    tx_res = client.post(
+        "/transfers", json={"source_account_id": a1_id, "target_account_id": a2_id, "amount": 400.0}
+    )
     assert tx_res.status_code == 200
     assert tx_res.json()["source_balance"] == 800.0
     assert tx_res.json()["target_balance"] == 600.0
 
     # 6. Negative overdraft rejected
-    fail_res = client.post("/transfers", json={"source_account_id": a1_id, "target_account_id": a2_id, "amount": 9999.0})
+    fail_res = client.post(
+        "/transfers",
+        json={"source_account_id": a1_id, "target_account_id": a2_id, "amount": 9999.0},
+    )
     assert fail_res.status_code == 400

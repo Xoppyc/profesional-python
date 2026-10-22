@@ -12,7 +12,9 @@ from bank_domain.services import AccountTransferService
 
 @pytest.fixture
 def sample_customer() -> Customer:
-    return Customer(customer_id="CUST-1", full_name="Artem Kyrychenko", email="zoom.2000v@gmail.com")
+    return Customer(
+        customer_id="CUST-1", full_name="Artem Kyrychenko", email="zoom.2000v@gmail.com"
+    )
 
 
 def test_savings_account_reserve(sample_customer: Customer) -> None:
@@ -25,7 +27,9 @@ def test_savings_account_reserve(sample_customer: Customer) -> None:
 
 
 def test_current_account_overdraft(sample_customer: Customer) -> None:
-    current = CurrentAccount("UA-CUR-1", sample_customer, initial_balance=200.0, overdraft_limit=1000.0)
+    current = CurrentAccount(
+        "UA-CUR-1", sample_customer, initial_balance=200.0, overdraft_limit=1000.0
+    )
     current.withdraw(800.0)
     assert current.balance == -600.0
 

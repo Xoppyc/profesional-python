@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Optional
+
 from bank_processor.models import AccountRecord, AccountType
 
 
@@ -13,7 +13,7 @@ def build_account_index(
 def find_account_by_number(
     index: dict[str, AccountRecord],
     account_number: str,
-) -> Optional[AccountRecord]:
+) -> AccountRecord | None:
     return index.get(account_number)
 
 
@@ -42,7 +42,7 @@ def calculate_average_balance(
 
 def find_highest_balance_account(
     accounts: list[AccountRecord],
-) -> Optional[AccountRecord]:
+) -> AccountRecord | None:
     if not accounts:
         return None
     return max(accounts, key=lambda acc: acc.balance)

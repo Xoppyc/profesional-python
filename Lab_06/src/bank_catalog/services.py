@@ -6,10 +6,14 @@ class BankService:
     def __init__(self, repo: AccountRepository) -> None:
         self.repo = repo
 
-    def open_account(self, account_number: str, client_id: str, initial_deposit: float = 0.0) -> AccountEntity:
+    def open_account(
+        self, account_number: str, client_id: str, initial_deposit: float = 0.0
+    ) -> AccountEntity:
         if self.repo.get_by_number(account_number):
             raise ValueError(f"Account {account_number} already exists")
-        account = AccountEntity(account_number=account_number, client_id=client_id, balance=initial_deposit)
+        account = AccountEntity(
+            account_number=account_number, client_id=client_id, balance=initial_deposit
+        )
         self.repo.save(account)
         return account
 

@@ -1,13 +1,16 @@
 from collections.abc import Generator
+
 from fastapi.testclient import TestClient
-import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
+
 from bank_account_service.api import app
 from bank_account_service.database import Base, get_db
 
-engine = create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False}, poolclass=StaticPool)
+engine = create_engine(
+    "sqlite:///:memory:", connect_args={"check_same_thread": False}, poolclass=StaticPool
+)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base.metadata.create_all(bind=engine)
 
@@ -32,16 +35,25 @@ def test_production_health() -> None:
 
 def test_full_account_lifecycle() -> None:
     # 1. Register Client
-    c_res = client.post("/clients", json={"full_name": "Artem Kyrychenko", "email": "zoom.2000v@gmail.com"})
+    c_res = client.post(
+        "/clients", json={"full_name": "Artem Kyrychenko", "email": "zoom.2000v@gmail.com"}
+    )
     assert c_res.status_code == 201
     c_id = c_res.json()["id"]
 
     # 2. Register Accounts
-    a1 = client.post("/accounts", json={"account_number": "UA9001", "client_id": c_id, "initial_balance": 2000.0}).json()
-    a2 = client.post("/accounts", json={"account_number": "UA9002", "client_id": c_id, "initial_balance": 500.0}).json()
+    a1 = client.post(
+        "/accounts", json={"account_number": "UA9001", "client_id": c_id, "initial_balance": 2000.0}
+    ).json()
+    a2 = client.post(
+        "/accounts", json={"account_number": "UA9002", "client_id": c_id, "initial_balance": 500.0}
+    ).json()
 
     # 3. Transfer
-    tx = client.post("/transfers", json={"source_account_id": a1["id"], "target_account_id": a2["id"], "amount": 750.0})
+    tx = client.post(
+        "/transfers",
+        json={"source_account_id": a1["id"], "target_account_id": a2["id"], "amount": 750.0},
+    )
     assert tx.status_code == 200
     assert tx.json()["source_balance"] == 1250.0
     assert tx.json()["target_balance"] == 1250.0

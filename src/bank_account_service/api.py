@@ -1,6 +1,8 @@
 from typing import Annotated
+
 from fastapi import Depends, FastAPI, HTTPException, status
 from sqlalchemy.orm import Session
+
 from bank_account_service.database import Base, engine, get_db
 from bank_account_service.repositories import BankRepository
 from bank_account_service.schemas import (

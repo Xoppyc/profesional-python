@@ -1,11 +1,10 @@
 import functools
 import time
-from typing import Any, Callable, TypeVar
+from collections.abc import Callable
+from typing import Any
 
-F = TypeVar("F", bound=Callable[..., Any])
 
-
-def measure_execution_time(func: F) -> F:
+def measure_execution_time[F: Callable[..., Any]](func: F) -> F:
     @functools.wraps(func)
     def wrapper(*args: Any, **kwargs: Any) -> Any:
         start_time = time.perf_counter()
@@ -17,7 +16,7 @@ def measure_execution_time(func: F) -> F:
     return wrapper  # type: ignore[return-value]
 
 
-def audit_transaction_call(action_name: str) -> Callable[[F], F]:
+def audit_transaction_call[F: Callable[..., Any]](action_name: str) -> Callable[[F], F]:
     def decorator(func: F) -> F:
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:

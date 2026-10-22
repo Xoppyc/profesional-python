@@ -1,6 +1,7 @@
 import json
 from dataclasses import asdict
 from pathlib import Path
+
 from reliable_importer.models import BankingEntry
 
 

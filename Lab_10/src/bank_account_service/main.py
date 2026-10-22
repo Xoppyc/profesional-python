@@ -1,4 +1,5 @@
 import uvicorn
+
 from bank_account_service.api import app
 
 

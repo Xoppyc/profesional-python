@@ -16,7 +16,9 @@ def run_demo() -> None:
     acc2 = create_account(accounts, "UA10002", "Olena Kovalenko", 3200.0)
     acc3 = create_account(accounts, "UA10003", "Ivan Petrenko", 750.0)
 
-    print(f"Created accounts: {len(accounts)}")
+    print(
+        f"Created accounts: {len(accounts)} ({acc1.account_number}, {acc2.account_number}, {acc3.account_number})"
+    )
     deposit(accounts, "UA10001", 500.0)
     print(f"UA10001 after deposit 500: {acc1.balance}")
 
@@ -28,7 +30,9 @@ def run_demo() -> None:
 
     largest = find_largest_account(accounts)
     if largest:
-        print(f"Largest account: {largest.account_number} ({largest.client_name}) - {largest.balance}")
+        print(
+            f"Largest account: {largest.account_number} ({largest.client_name}) - {largest.balance}"
+        )
 
     high_net_worth = filter_by_min_balance(accounts, 2000.0)
     print(f"Accounts with balance >= 2000: {[a.account_number for a in high_net_worth]}")

@@ -1,4 +1,5 @@
 import time
+
 from bank_perf.analytics import (
     calculate_total_multiprocess,
     calculate_total_numpy,

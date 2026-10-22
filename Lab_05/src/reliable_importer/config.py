@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from pathlib import Path
+
 import yaml
+
 from reliable_importer.exceptions import ConfigurationError
 
 

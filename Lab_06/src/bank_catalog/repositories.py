@@ -1,4 +1,3 @@
-from typing import Optional
 from bank_catalog.models import AccountEntity
 
 
@@ -9,7 +8,7 @@ class AccountRepository:
     def save(self, account: AccountEntity) -> None:
         self._accounts[account.account_number] = account
 
-    def get_by_number(self, account_number: str) -> Optional[AccountEntity]:
+    def get_by_number(self, account_number: str) -> AccountEntity | None:
         return self._accounts.get(account_number)
 
     def list_all(self) -> list[AccountEntity]:

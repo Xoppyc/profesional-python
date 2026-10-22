@@ -1,5 +1,5 @@
 from unittest.mock import MagicMock
-import pytest
+
 from bank_catalog.models import AccountEntity
 from bank_catalog.repositories import AccountRepository
 from bank_catalog.services import BankService

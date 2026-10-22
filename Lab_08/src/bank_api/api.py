@@ -1,5 +1,7 @@
-from datetime import datetime
+from datetime import UTC, datetime
+
 from fastapi import FastAPI, HTTPException, status
+
 from bank_api.schemas import (
     AccountCreate,
     AccountResponse,
@@ -84,7 +86,7 @@ def deposit(account_id: int, payload: AmountPayload) -> dict:
         "account_id": account_id,
         "operation": "deposit",
         "amount": payload.amount,
-        "created_at": datetime.utcnow(),
+        "created_at": datetime.now(UTC),
     }
     _id_seq += 1
     transactions_db.append(tx)
@@ -107,7 +109,7 @@ def withdraw(account_id: int, payload: AmountPayload) -> dict:
         "account_id": account_id,
         "operation": "withdraw",
         "amount": payload.amount,
-        "created_at": datetime.utcnow(),
+        "created_at": datetime.now(UTC),
     }
     _id_seq += 1
     transactions_db.append(tx)
@@ -130,11 +132,27 @@ def transfer(payload: TransferPayload) -> dict:
     source["balance"] -= payload.amount
     target["balance"] += payload.amount
 
-    now = datetime.utcnow()
-    tx_out = {"id": _id_seq, "account_id": source["id"], "operation": "transfer_out", "amount": payload.amount, "created_at": now}
+    now = datetime.now(UTC)
+    tx_out = {
+        "id": _id_seq,
+        "account_id": source["id"],
+        "operation": "transfer_out",
+        "amount": payload.amount,
+        "created_at": now,
+    }
     _id_seq += 1
-    tx_in = {"id": _id_seq, "account_id": target["id"], "operation": "transfer_in", "amount": payload.amount, "created_at": now}
+    tx_in = {
+        "id": _id_seq,
+        "account_id": target["id"],
+        "operation": "transfer_in",
+        "amount": payload.amount,
+        "created_at": now,
+    }
     _id_seq += 1
     transactions_db.extend([tx_out, tx_in])
 
-    return {"message": "Transfer successful", "source_balance": source["balance"], "target_balance": target["balance"]}
+    return {
+        "message": "Transfer successful",
+        "source_balance": source["balance"],
+        "target_balance": target["balance"],
+    }

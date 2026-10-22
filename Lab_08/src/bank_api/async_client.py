@@ -1,5 +1,6 @@
 import asyncio
 from typing import Any
+
 import httpx
 
 
@@ -14,7 +15,9 @@ class AsyncAccountAggregator:
         async with self.semaphore:
             for attempt in range(retries + 1):
                 try:
-                    response = await client.get(f"{self.base_url}/accounts/{account_id}", timeout=5.0)
+                    response = await client.get(
+                        f"{self.base_url}/accounts/{account_id}", timeout=5.0
+                    )
                     if response.status_code == 200:
                         return response.json()
                 except httpx.RequestError:

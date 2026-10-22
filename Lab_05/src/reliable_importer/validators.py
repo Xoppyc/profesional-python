@@ -1,6 +1,5 @@
 from reliable_importer.config import ImporterConfig
 from reliable_importer.exceptions import InvalidRecordError
-from reliable_importer.logging_config import mask_sensitive_account
 from reliable_importer.models import BankingEntry
 
 

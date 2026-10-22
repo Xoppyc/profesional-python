@@ -32,7 +32,9 @@ class TransactionRecord:
 
 
 class BaseAccount(ABC):
-    def __init__(self, account_number: str, customer: Customer, initial_balance: float = 0.0) -> None:
+    def __init__(
+        self, account_number: str, customer: Customer, initial_balance: float = 0.0
+    ) -> None:
         if initial_balance < 0:
             raise ValueError("Initial balance cannot be negative")
         self._account_number = account_number
@@ -61,8 +63,7 @@ class BaseAccount(ABC):
         self._balance += amount
 
     @abstractmethod
-    def withdraw(self, amount: float) -> None:
-        ...
+    def withdraw(self, amount: float) -> None: ...
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self._account_number} balance={self._balance:.2f}>"
@@ -118,5 +119,7 @@ class CurrentAccount(BaseAccount):
         if amount <= 0:
             raise ValueError("Amount must be positive")
         if self._balance - amount < -self.overdraft_limit:
-            raise OverdraftLimitExceededError(f"Withdrawal breaches authorized overdraft of {self.overdraft_limit}")
+            raise OverdraftLimitExceededError(
+                f"Withdrawal breaches authorized overdraft of {self.overdraft_limit}"
+            )
         self._balance -= amount

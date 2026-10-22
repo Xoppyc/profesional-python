@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import pytest
 from reliable_importer.config import ImporterConfig
 from reliable_importer.exceptions import InvalidRecordError

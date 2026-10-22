@@ -1,13 +1,15 @@
 import sqlite3
-from typing import Any, Optional
+from typing import Any
 
 
-def query_account_raw_db_api(db_path: str, account_number: str) -> Optional[dict[str, Any]]:
+def query_account_raw_db_api(db_path: str, account_number: str) -> dict[str, Any] | None:
     # DB-API parameterized query prevents SQL injection attacks
     conn = sqlite3.connect(db_path)
     try:
         cursor = conn.cursor()
-        query = "SELECT id, account_number, balance, client_id FROM accounts WHERE account_number = ?"
+        query = (
+            "SELECT id, account_number, balance, client_id FROM accounts WHERE account_number = ?"
+        )
         cursor.execute(query, (account_number,))
         row = cursor.fetchone()
         if not row:

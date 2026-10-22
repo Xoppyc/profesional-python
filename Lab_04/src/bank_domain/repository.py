@@ -1,10 +1,7 @@
-from typing import Generic, TypeVar
 from bank_domain.protocols import Identifiable
 
-T = TypeVar("T", bound=Identifiable)
 
-
-class InMemoryRepository(Generic[T]):
+class InMemoryRepository[T: Identifiable]:
     def __init__(self) -> None:
         self._storage: dict[str, T] = {}
 

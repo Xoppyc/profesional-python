@@ -1,8 +1,6 @@
 import csv
+from collections.abc import Generator
 from pathlib import Path
-from typing import Generator
-from reliable_importer.exceptions import InvalidRecordError
-from reliable_importer.models import BankingEntry
 
 
 def read_banking_csv(file_path: Path) -> Generator[dict[str, str], None, None]:

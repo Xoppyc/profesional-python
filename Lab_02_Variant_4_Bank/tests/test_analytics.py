@@ -1,5 +1,4 @@
 import pytest
-from bank_processor.models import AccountRecord
 from bank_processor.analytics import (
     build_account_index,
     calculate_average_balance,
@@ -10,6 +9,7 @@ from bank_processor.analytics import (
     group_by_account_type,
     sort_accounts_by_balance,
 )
+from bank_processor.models import AccountRecord
 
 
 @pytest.fixture

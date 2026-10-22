@@ -4,10 +4,7 @@ from bank_manager.services import (
     calculate_total_balance,
     create_account,
     deposit,
-    filter_by_min_balance,
-    find_by_account_number,
     find_largest_account,
-    get_balance,
     withdraw,
 )
 

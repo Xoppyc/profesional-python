@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
-from bank_storage.models import AccountModel, TransactionModel
+
+from bank_storage.models import TransactionModel
 from bank_storage.repositories import AccountRepository
 
 
@@ -7,7 +8,9 @@ class InsufficientBalanceError(Exception):
     pass
 
 
-def transfer_money(session: Session, source_num: str, target_num: str, amount: float) -> tuple[float, float]:
+def transfer_money(
+    session: Session, source_num: str, target_num: str, amount: float
+) -> tuple[float, float]:
     if amount <= 0:
         raise ValueError("Transfer amount must be positive")
 

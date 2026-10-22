@@ -1,16 +1,14 @@
 import itertools
-from collections.abc import Generator, Iterable, Iterator
-from typing import Callable, Optional, TypeVar
-from bank_stream.models import StreamTransaction
+from collections.abc import Callable, Generator, Iterable, Iterator
 
-T = TypeVar("T")
+from bank_stream.models import StreamTransaction
 
 
 def parse_csv_stream(lines: Iterable[str]) -> Generator[StreamTransaction, None, None]:
     # Stream lines on demand to keep memory constant O(1) regardless of file size
     for line in lines:
         cleaned = line.strip()
-        if not cleaned or cleaned.startswith("#") or cleaned.startswith("transaction_id"):
+        if not cleaned or cleaned.startswith(("#", "transaction_id")):
             continue
         parts = [p.strip() for p in cleaned.split(",")]
         if len(parts) != 6:
@@ -59,7 +57,7 @@ def filter_by_balance_threshold(
 def find_first_matching(
     stream: Iterable[StreamTransaction],
     predicate: Callable[[StreamTransaction], bool],
-) -> Optional[StreamTransaction]:
+) -> StreamTransaction | None:
     for tx in stream:
         if predicate(tx):
             return tx
@@ -70,11 +68,11 @@ def stream_total_balance(stream: Iterable[StreamTransaction]) -> float:
     return sum(tx.current_balance for tx in stream)
 
 
-def take_first_n(stream: Iterable[T], n: int) -> Iterator[T]:
+def take_first_n[T](stream: Iterable[T], n: int) -> Iterator[T]:
     return itertools.islice(stream, n)
 
 
-def batch_stream(stream: Iterable[T], batch_size: int) -> Generator[list[T], None, None]:
+def batch_stream[T](stream: Iterable[T], batch_size: int) -> Generator[list[T], None, None]:
     iterator = iter(stream)
     while True:
         chunk = list(itertools.islice(iterator, batch_size))

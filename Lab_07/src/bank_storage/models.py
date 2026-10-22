@@ -1,6 +1,8 @@
 from datetime import datetime
+
 from sqlalchemy import CheckConstraint, DateTime, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from bank_storage.database import Base
 
 
@@ -22,11 +24,11 @@ class AccountModel(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     account_number: Mapped[str] = mapped_column(String(32), unique=True, nullable=False, index=True)
     balance: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
-    client_id: Mapped[int] = mapped_column(Integer, ForeignKey("clients.id", ondelete="CASCADE"), nullable=False)
-
-    __table_args__ = (
-        CheckConstraint("balance >= 0.0", name="chk_positive_balance"),
+    client_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("clients.id", ondelete="CASCADE"), nullable=False
     )
+
+    __table_args__ = (CheckConstraint("balance >= 0.0", name="chk_positive_balance"),)
 
     client: Mapped["ClientModel"] = relationship("ClientModel", back_populates="accounts")
     transactions: Mapped[list["TransactionModel"]] = relationship(
@@ -38,7 +40,9 @@ class TransactionModel(Base):
     __tablename__ = "transactions"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    account_id: Mapped[int] = mapped_column(Integer, ForeignKey("accounts.id", ondelete="CASCADE"), nullable=False)
+    account_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("accounts.id", ondelete="CASCADE"), nullable=False
+    )
     operation: Mapped[str] = mapped_column(String(20), nullable=False)
     amount: Mapped[float] = mapped_column(Float, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

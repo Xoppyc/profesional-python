@@ -1,4 +1,4 @@
-from bank_domain.models import BaseAccount, BankingError
+from bank_domain.models import BankingError, BaseAccount
 from bank_domain.repository import InMemoryRepository
 
 

@@ -2,7 +2,6 @@ from bank_processor.analytics import (
     build_account_index,
     calculate_average_balance,
     calculate_total_funds,
-    filter_by_min_balance,
     find_account_by_number,
     find_highest_balance_account,
     group_by_account_type,

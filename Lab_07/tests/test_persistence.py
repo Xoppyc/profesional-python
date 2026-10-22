@@ -1,11 +1,11 @@
 from collections.abc import Generator
+
 import pytest
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, sessionmaker
 from bank_storage.database import Base
-from bank_storage.models import AccountModel, ClientModel
 from bank_storage.repositories import AccountRepository, ClientRepository
 from bank_storage.services import InsufficientBalanceError, transfer_money
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session, sessionmaker
 
 
 @pytest.fixture

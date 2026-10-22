@@ -1,10 +1,7 @@
 import pytest
-from bank_stream.models import StreamTransaction
 from bank_stream.pipeline import (
     batch_stream,
-    filter_by_balance_threshold,
     filter_by_client_stream,
-    find_first_matching,
     parse_csv_stream,
     stream_total_balance,
     take_first_n,

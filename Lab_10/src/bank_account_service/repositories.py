@@ -1,6 +1,6 @@
-from typing import Optional
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+
 from bank_account_service.models import Account, Client, Transaction
 
 
@@ -15,17 +15,21 @@ class BankRepository:
         self.db.refresh(client)
         return client
 
-    def get_client(self, client_id: int) -> Optional[Client]:
+    def get_client(self, client_id: int) -> Client | None:
         return self.db.get(Client, client_id)
 
-    def create_account(self, client_id: int, account_number: str, initial_balance: float) -> Account:
-        account = Account(client_id=client_id, account_number=account_number, balance=initial_balance)
+    def create_account(
+        self, client_id: int, account_number: str, initial_balance: float
+    ) -> Account:
+        account = Account(
+            client_id=client_id, account_number=account_number, balance=initial_balance
+        )
         self.db.add(account)
         self.db.commit()
         self.db.refresh(account)
         return account
 
-    def get_account_by_id(self, account_id: int) -> Optional[Account]:
+    def get_account_by_id(self, account_id: int) -> Account | None:
         return self.db.get(Account, account_id)
 
     def list_accounts(self) -> list[Account]:
@@ -39,5 +43,9 @@ class BankRepository:
         return tx
 
     def list_account_transactions(self, account_id: int) -> list[Transaction]:
-        stmt = select(Transaction).where(Transaction.account_id == account_id).order_by(Transaction.id.desc())
+        stmt = (
+            select(Transaction)
+            .where(Transaction.account_id == account_id)
+            .order_by(Transaction.id.desc())
+        )
         return list(self.db.scalars(stmt).all())
