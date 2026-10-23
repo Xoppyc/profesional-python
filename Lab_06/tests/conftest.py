@@ -9,6 +9,34 @@ from application.services import BankingService
 from bank_catalog.models import ClientEntity
 from bank_catalog.repositories import AccountRepository
 from bank_catalog.services import BankService
+from shop.models import Cart, Product
+from shop.value_objects import Money
+
+
+@pytest.fixture
+def laptop() -> Product:
+    return Product(
+        product_id=1,
+        name="Laptop",
+        price=Money(35_000),
+    )
+
+
+@pytest.fixture
+def mouse() -> Product:
+    return Product(
+        product_id=2,
+        name="Mouse",
+        price=Money(1_200),
+    )
+
+
+@pytest.fixture
+def cart(laptop: Product, mouse: Product) -> Cart:
+    c = Cart()
+    c.add(laptop, 1)
+    c.add(mouse, 2)
+    return c
 
 
 @pytest.fixture
@@ -45,7 +73,6 @@ def sample_account(sample_customer: Customer) -> Account:
 
 @pytest.fixture
 def managed_account() -> Generator[Account, None, None]:
-    # Fixture using generator yield for resource setup and teardown protocol
     acc = Account("UA-YIELD-1", "CUST-Y", 1000.0)
     yield acc
     acc.balance = 0.0
