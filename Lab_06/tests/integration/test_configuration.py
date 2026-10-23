@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from application.config import load_config
+from application.config import AppConfig, load_config
 
 
 def test_load_configuration_rules(tmp_path: Path) -> None:
@@ -22,3 +22,10 @@ def test_load_configuration_rules(tmp_path: Path) -> None:
     assert "deposit" in config.allowed_operations
     assert "USD" in config.allowed_currencies
     assert config.min_balance == 100.0
+
+
+def test_default_config_fallback() -> None:
+    config = load_config("non_existing_file.yaml")
+    assert isinstance(config, AppConfig)
+    assert "deposit" in config.allowed_operations
+    assert "UAH" in config.allowed_currencies
