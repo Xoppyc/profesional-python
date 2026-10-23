@@ -14,6 +14,7 @@ dependencies = []
 dev = [
     "pytest>=8.0.0",
     "pytest-cov>=4.1.0",
+    "anyio>=4.0.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -22,4 +23,22 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
-addopts = "-v --strict-markers"
+addopts = [
+    "-ra",
+    "--strict-markers",
+]
+markers = [
+    "integration: integration tests",
+    "unit: unit tests",
+]
+
+[tool.coverage.run]
+branch = true
+source = [
+    "application",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+fail_under = 80

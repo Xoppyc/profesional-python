@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 import pytest
 from bank_catalog.services import BankService
 
 
+@pytest.mark.integration
 def test_full_banking_workflow_integration(bank_service: BankService) -> None:
     # 1. Open two accounts
     acc_a = bank_service.open_account("UA-ACC-101", "C-1", 5000.0)

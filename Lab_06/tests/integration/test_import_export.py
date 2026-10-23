@@ -3,10 +3,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 from application.exporters import export_accounts_json, export_order, import_accounts_csv
 from application.models import Account
 
 
+@pytest.mark.integration
 def test_csv_import_and_json_export_integration(tmp_path: Path) -> None:
     csv_file = tmp_path / "accounts.csv"
     csv_file.write_text(
@@ -27,6 +29,7 @@ def test_csv_import_and_json_export_integration(tmp_path: Path) -> None:
     assert "UA101" in json_file.read_text(encoding="utf-8")
 
 
+@pytest.mark.integration
 def test_export_order_via_tmp_path(tmp_path: Path) -> None:
     output = tmp_path / "order.json"
     order = {"id": 1, "total": 100.0, "status": "paid"}
@@ -36,6 +39,7 @@ def test_export_order_via_tmp_path(tmp_path: Path) -> None:
     assert data == order
 
 
+@pytest.mark.integration
 def test_csv_import_with_missing_fields(tmp_path: Path) -> None:
     csv_file = tmp_path / "corrupted.csv"
     csv_file.write_text(
@@ -48,6 +52,7 @@ def test_csv_import_with_missing_fields(tmp_path: Path) -> None:
     assert imported[0].status == "active"
 
 
+@pytest.mark.integration
 def test_atomic_export_replaces_temp_file(tmp_path: Path) -> None:
     accounts = [Account("UA1", "C1", 50.0)]
     out_file = tmp_path / "target.json"
