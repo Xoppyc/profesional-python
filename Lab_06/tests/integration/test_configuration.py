@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from application.config import AppConfig, load_config
+import pytest
+from application.config import AppConfig, get_payment_mode, load_config
 
 
 def test_load_configuration_rules(tmp_path: Path) -> None:
@@ -29,3 +30,13 @@ def test_default_config_fallback() -> None:
     assert isinstance(config, AppConfig)
     assert "deposit" in config.allowed_operations
     assert "UAH" in config.allowed_currencies
+
+
+def test_payment_mode_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("PAYMENT_MODE", "test")
+    assert get_payment_mode() == "test"
+
+
+def test_default_payment_mode(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("PAYMENT_MODE", raising=False)
+    assert get_payment_mode() == "sandbox"

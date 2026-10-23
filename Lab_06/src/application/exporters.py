@@ -8,6 +8,15 @@ from pathlib import Path
 from application.models import Account
 
 
+def export_order(order: dict, path: Path | str) -> None:
+    output_path = Path(path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        json.dumps(order, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
 def export_accounts_json(accounts: Iterable[Account], path: Path | str) -> int:
     output_path = Path(path)
     output_path.parent.mkdir(parents=True, exist_ok=True)

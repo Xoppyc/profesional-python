@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -12,6 +13,10 @@ class AppConfig:
     allowed_operations: set[str] = field(default_factory=lambda: {"deposit", "withdraw"})
     allowed_currencies: set[str] = field(default_factory=lambda: {"UAH", "USD", "EUR"})
     min_balance: float = 0.0
+
+
+def get_payment_mode() -> str:
+    return os.getenv("PAYMENT_MODE", "sandbox")
 
 
 def load_config(path: Path | str) -> AppConfig:

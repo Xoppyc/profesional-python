@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from application.models import Account, BankingError
-from application.repositories import InMemoryAccountRepository
+from application.repositories import FakeRepository, InMemoryAccountRepository
 from application.services import AsyncLedgerClient, BankingService, Notifier
 from bank_catalog.models import AccountEntity
 from bank_catalog.repositories import AccountRepository
@@ -107,3 +107,14 @@ async def test_async_ledger_dependency_with_async_mock() -> None:
     assert synced_balance == 12500.75
     assert acc.balance == 12500.75
     mock_async_client.fetch_remote_balance.assert_awaited_once_with("UA100")
+
+
+def test_fake_repository_crud() -> None:
+    fake_repo = FakeRepository()
+    acc = Account("UA777", "CUST7", 900.0)
+    fake_repo.add(acc)
+
+    assert fake_repo.get_by_id("UA777") == acc
+    assert len(fake_repo.list_all()) == 1
+    assert fake_repo.delete("UA777") is True
+    assert fake_repo.get_by_id("UA777") is None

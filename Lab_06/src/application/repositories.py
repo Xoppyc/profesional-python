@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Protocol, TypeVar
+from typing import Any, Protocol, TypeVar
 
 from application.models import Account
 
@@ -12,6 +12,24 @@ class Repository(Protocol[T]):
     def get_by_id(self, entity_id: str) -> T | None: ...
     def list_all(self) -> list[T]: ...
     def delete(self, entity_id: str) -> bool: ...
+
+
+class FakeRepository:
+    def __init__(self) -> None:
+        self.items: dict[str, Any] = {}
+
+    def add(self, item: Any) -> None:
+        key = getattr(item, "account_number", getattr(item, "identifier", str(id(item))))
+        self.items[key] = item
+
+    def get_by_id(self, entity_id: str) -> Any | None:
+        return self.items.get(entity_id)
+
+    def list_all(self) -> list[Any]:
+        return list(self.items.values())
+
+    def delete(self, entity_id: str) -> bool:
+        return self.items.pop(entity_id, None) is not None
 
 
 class InMemoryAccountRepository:

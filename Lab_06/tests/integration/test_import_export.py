@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
-from application.exporters import export_accounts_json, import_accounts_csv
+from application.exporters import export_accounts_json, export_order, import_accounts_csv
 from application.models import Account
 
 
@@ -24,6 +25,15 @@ def test_csv_import_and_json_export_integration(tmp_path: Path) -> None:
     assert exported_count == 2
     assert json_file.exists()
     assert "UA101" in json_file.read_text(encoding="utf-8")
+
+
+def test_export_order_via_tmp_path(tmp_path: Path) -> None:
+    output = tmp_path / "order.json"
+    order = {"id": 1, "total": 100.0, "status": "paid"}
+    export_order(order, output)
+    assert output.exists()
+    data = json.loads(output.read_text(encoding="utf-8"))
+    assert data == order
 
 
 def test_csv_import_with_missing_fields(tmp_path: Path) -> None:

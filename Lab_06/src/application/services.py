@@ -6,6 +6,22 @@ from application.models import Account, BankingError
 from application.repositories import InMemoryAccountRepository
 
 
+def classify_grade(grade: float) -> str:
+    if grade >= 90.0:
+        return "excellent"
+    if grade >= 60.0:
+        return "passed"
+    return "failed"
+
+
+def classify_account_balance(balance: float) -> str:
+    if balance >= 10000.0:
+        return "premium"
+    if balance >= 1000.0:
+        return "standard"
+    return "basic"
+
+
 class Notifier(Protocol):
     def notify(self, message: str) -> None: ...
     def send(self, message: str) -> None: ...

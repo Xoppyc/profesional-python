@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Generator
+
 import pytest
 from application.models import Account, Customer
 from application.repositories import InMemoryAccountRepository
@@ -39,6 +41,14 @@ def sample_account(sample_customer: Customer) -> Account:
         balance=1000.0,
         status="active",
     )
+
+
+@pytest.fixture
+def managed_account() -> Generator[Account, None, None]:
+    # Fixture using generator yield for resource setup and teardown protocol
+    acc = Account("UA-YIELD-1", "CUST-Y", 1000.0)
+    yield acc
+    acc.balance = 0.0
 
 
 @pytest.fixture
