@@ -12,6 +12,7 @@ build/
 *.egg-info/
 .env
 data/
+!Lab_03/data/
 *.db
 .idea/
 .vscode/
