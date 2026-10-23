@@ -17,3 +17,4 @@ class AccountNumber:
 @dataclass(slots=True, frozen=True)
 class TransactionId:
     value: str
+

@@ -22,3 +22,4 @@ class TransactionDTO(TypedDict):
     amount: float
     operation_type: str
     timestamp: str
+

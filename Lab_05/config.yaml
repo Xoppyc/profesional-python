@@ -3,14 +3,25 @@ app:
   environment: "production"
   strict_mode: false
 
+paths:
+  input_csv: "data/accounts.csv"
+  output_json: "output/accounts_export.json"
+  log_file: "logs/importer.log"
+  input_path: "data/accounts.csv"
+  output_path: "output/accounts_export.json"
+
+processing:
+  minimum_balance: 0.0
+  minimum_grade: 0.0
+  skip_invalid: true
+
+logging:
+  level: "INFO"
+  path: "logs/importer.log"
+
 validation:
   min_balance: 0.0
   max_single_transfer: 1000000.0
   allowed_operations:
     - "deposit"
     - "withdraw"
-
-paths:
-  input_csv: "data/accounts.csv"
-  output_json: "output/accounts_export.json"
-  log_file: "logs/importer.log"

@@ -63,3 +63,4 @@ def test_transaction_model() -> None:
     )
     assert tx.transaction_id == "TX100"
     assert tx.amount == 500.0
+

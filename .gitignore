@@ -13,6 +13,7 @@ build/
 .env
 data/
 !Lab_03/data/
+!Lab_05/data/
 *.db
 .idea/
 .vscode/

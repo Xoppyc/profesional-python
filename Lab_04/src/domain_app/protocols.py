@@ -27,3 +27,4 @@ class Notifier(Protocol):
 
 
 NotificationService = Notifier
+

@@ -31,3 +31,4 @@ class AccountRepository(InMemoryRepository[Account]):
 
     def calculate_total_funds(self) -> float:
         return round(sum(acc.balance for acc in self.list_all()), 2)
+
