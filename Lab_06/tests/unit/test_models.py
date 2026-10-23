@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import pytest
+from application.models import Account, InsufficientFundsError
 from bank_catalog.models import AccountEntity
 
 
@@ -24,3 +27,19 @@ def test_withdraw_limits() -> None:
     acc.status = "blocked"
     with pytest.raises(PermissionError, match="inactive"):
         acc.deposit(100.0)
+
+
+def test_application_account_creation_and_balance() -> None:
+    account = Account("UA300", "CUST-1", 5000.0)
+    assert account.account_number == "UA300"
+    assert account.client_id == "CUST-1"
+    assert account.check_balance() == 5000.0
+
+    account.deposit(500.0)
+    assert account.check_balance() == 5500.0
+
+    account.withdraw(1500.0)
+    assert account.check_balance() == 4000.0
+
+    with pytest.raises(InsufficientFundsError):
+        account.withdraw(5000.0)
