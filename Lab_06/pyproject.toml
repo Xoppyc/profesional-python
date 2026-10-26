@@ -7,8 +7,10 @@ name = "application"
 version = "0.6.0"
 description = "Lab 06 - Comprehensive Pytest Automation for Banking"
 authors = [{ name = "Artem Kyrychenko", email = "zoom.2000v@gmail.com" }]
-requires-python = ">=3.10"
-dependencies = []
+requires-python = ">=3.12"
+dependencies = [
+    "pyyaml>=6.0",
+]
 
 [project.optional-dependencies]
 dev = [
