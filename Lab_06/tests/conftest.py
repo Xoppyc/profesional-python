@@ -14,6 +14,23 @@ from shop.value_objects import Money
 
 
 @pytest.fixture
+def product_factory():
+    def create_product(
+        *,
+        product_id: int = 1,
+        name: str = "Product",
+        price: float = 100,
+    ) -> Product:
+        return Product(
+            product_id=product_id,
+            name=name,
+            price=Money(price),
+        )
+
+    return create_product
+
+
+@pytest.fixture
 def laptop() -> Product:
     return Product(
         product_id=1,

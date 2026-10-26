@@ -36,6 +36,7 @@ markers = [
 branch = true
 source = [
     "application",
+    "shop",
 ]
 
 [tool.coverage.report]

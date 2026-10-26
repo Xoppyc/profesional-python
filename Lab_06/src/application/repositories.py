@@ -39,6 +39,8 @@ class InMemoryAccountRepository:
     def add(self, entity: Account) -> None:
         self._items[entity.account_number] = entity
 
+    save = add
+
     def get_by_id(self, entity_id: str) -> Account | None:
         return self._items.get(entity_id)
 

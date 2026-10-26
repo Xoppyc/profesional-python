@@ -14,6 +14,29 @@ class InsufficientFundsError(BankingError):
     """Raised when withdrawal produces negative balance."""
 
 
+class DataImportError(Exception):
+    """Raised when data import parsing fails."""
+
+
+def parse_value(text: str) -> int:
+    try:
+        return int(text)
+    except ValueError as error:
+        raise DataImportError("Invalid value") from error
+
+
+class CustomResource:
+    def __init__(self) -> None:
+        self.is_open: bool = False
+
+    def __enter__(self) -> CustomResource:
+        self.is_open = True
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        self.is_open = False
+
+
 @dataclass(slots=True, frozen=True)
 class Customer:
     client_id: str
