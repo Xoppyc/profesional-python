@@ -21,14 +21,29 @@ transactions_db: list[dict] = []
 _id_seq = 1
 
 
+@app.get("/", status_code=status.HTTP_200_OK)
+def root() -> dict[str, str]:
+    return {"message": "Bank Account REST API"}
+
+
 @app.get("/health", status_code=status.HTTP_200_OK)
 def health_check() -> dict[str, str]:
     return {"status": "ok", "service": "bank-api"}
 
 
 @app.get("/accounts", response_model=list[AccountResponse])
-def list_accounts() -> list[dict]:
-    return list(accounts_db.values())
+def list_accounts(limit: int = 100, offset: int = 0, client_id: int | None = None) -> list[dict]:
+    items = list(accounts_db.values())
+    if client_id is not None:
+        items = [a for a in items if a["client_id"] == client_id]
+    return items[offset : offset + limit]
+
+
+@app.delete("/accounts/{account_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_account(account_id: int) -> None:
+    if account_id not in accounts_db:
+        raise HTTPException(status_code=404, detail="Account not found")
+    del accounts_db[account_id]
 
 
 @app.get("/total-funds")
