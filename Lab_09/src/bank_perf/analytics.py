@@ -1,4 +1,5 @@
-from concurrent.futures import ProcessPoolExecutor
+from __future__ import annotations
+
 from functools import lru_cache
 
 import numpy as np
@@ -14,21 +15,37 @@ def calculate_total_sequential(accounts: list[AccountData]) -> float:
 
 
 def calculate_total_numpy(accounts: list[AccountData]) -> float:
-    # Vectorized computation leveraging SIMD CPU instructions
     balances = np.array([acc.balance for acc in accounts], dtype=np.float64)
     return float(np.sum(balances))
 
 
-def _chunk_sum(chunk: list[AccountData]) -> float:
-    return sum(acc.balance for acc in chunk)
+def statistics_python(values: list[float]) -> dict[str, float]:
+    if not values:
+        return {"average": 0.0, "minimum": 0.0, "maximum": 0.0, "sum": 0.0}
+    total = sum(values)
+    return {
+        "average": total / len(values),
+        "minimum": min(values),
+        "maximum": max(values),
+        "sum": total,
+    }
 
 
-def calculate_total_multiprocess(accounts: list[AccountData], workers: int = 4) -> float:
-    chunk_size = len(accounts) // workers
-    chunks = [accounts[i : i + chunk_size] for i in range(0, len(accounts), chunk_size)]
-    with ProcessPoolExecutor(max_workers=workers) as executor:
-        results = executor.map(_chunk_sum, chunks)
-    return sum(results)
+def statistics_numpy(values: list[float]) -> dict[str, float]:
+    if not values:
+        return {"average": 0.0, "minimum": 0.0, "maximum": 0.0, "sum": 0.0}
+    arr = np.array(values, dtype=np.float64)
+    return {
+        "average": float(np.mean(arr)),
+        "minimum": float(np.min(arr)),
+        "maximum": float(np.max(arr)),
+        "sum": float(np.sum(arr)),
+    }
+
+
+def calculate_scores_sequential(values: list[float]) -> list[float]:
+    # Compute adjusted interest yields sequentially
+    return [round(v * 1.05 + 2.5, 4) for v in values]
 
 
 @lru_cache(maxsize=128)
@@ -39,4 +56,16 @@ def get_cached_account_metrics(
         "count": float(total_count),
         "total_funds": total_sum,
         "average": total_sum / total_count if total_count > 0 else 0.0,
+    }
+
+
+@lru_cache(maxsize=128)
+def cached_group_statistics(group_key: str, balances: tuple[float, ...]) -> dict[str, float | str]:
+    if not balances:
+        return {"group": group_key, "total": 0.0, "mean": 0.0}
+    total = sum(balances)
+    return {
+        "group": group_key,
+        "total": round(total, 2),
+        "mean": round(total / len(balances), 2),
     }

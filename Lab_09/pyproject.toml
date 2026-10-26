@@ -16,6 +16,18 @@ dependencies = [
 dev = [
     "pytest>=8.0.0",
 ]
+test = [
+    "pytest>=8.0.0",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = [
+    "-ra",
+    "-v",
+]
+
