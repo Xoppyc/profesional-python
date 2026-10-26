@@ -26,6 +26,17 @@ def health_check() -> dict[str, str]:
     return {"status": "ok", "service": "bank-api"}
 
 
+@app.get("/accounts", response_model=list[AccountResponse])
+def list_accounts() -> list[dict]:
+    return list(accounts_db.values())
+
+
+@app.get("/total-funds")
+def get_total_funds() -> dict[str, float]:
+    total = sum(acc["balance"] for acc in accounts_db.values())
+    return {"total_funds": round(total, 2)}
+
+
 @app.post("/clients", response_model=ClientResponse, status_code=status.HTTP_201_CREATED)
 def create_client(payload: ClientCreate) -> dict:
     global _id_seq
