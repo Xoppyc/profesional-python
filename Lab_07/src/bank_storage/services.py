@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from sqlalchemy.orm import Session
 
 from bank_storage.models import TransactionModel
@@ -8,11 +10,60 @@ class InsufficientBalanceError(Exception):
     pass
 
 
+class NegativeAmountError(ValueError):
+    pass
+
+
+def deposit_money(session: Session, account_number: str, amount: float) -> float:
+    if amount <= 0:
+        raise NegativeAmountError("Deposit amount must be strictly positive")
+
+    repo = AccountRepository(session)
+    account = repo.get_by_number(account_number)
+    if not account:
+        raise ValueError(f"Account {account_number} not found")
+
+    try:
+        account.balance += amount
+        tx = TransactionModel(account_id=account.id, operation="deposit", amount=amount)
+        session.add(tx)
+        session.commit()
+        session.refresh(account)
+        return account.balance
+    except Exception:
+        session.rollback()
+        raise
+
+
+def withdraw_money(session: Session, account_number: str, amount: float) -> float:
+    if amount <= 0:
+        raise NegativeAmountError("Withdrawal amount must be strictly positive")
+
+    repo = AccountRepository(session)
+    account = repo.get_by_number(account_number)
+    if not account:
+        raise ValueError(f"Account {account_number} not found")
+
+    if account.balance < amount:
+        raise InsufficientBalanceError(f"Insufficient balance on account {account_number}")
+
+    try:
+        account.balance -= amount
+        tx = TransactionModel(account_id=account.id, operation="withdraw", amount=amount)
+        session.add(tx)
+        session.commit()
+        session.refresh(account)
+        return account.balance
+    except Exception:
+        session.rollback()
+        raise
+
+
 def transfer_money(
     session: Session, source_num: str, target_num: str, amount: float
 ) -> tuple[float, float]:
     if amount <= 0:
-        raise ValueError("Transfer amount must be positive")
+        raise NegativeAmountError("Transfer amount must be positive")
 
     repo = AccountRepository(session)
     source = repo.get_by_number(source_num)
@@ -24,7 +75,6 @@ def transfer_money(
     if source.balance < amount:
         raise InsufficientBalanceError(f"Insufficient balance on account {source_num}")
 
-    # Use explicit transaction block to guarantee atomic balance deduction and transaction ledger creation
     try:
         source.balance -= amount
         target.balance += amount
@@ -39,3 +89,8 @@ def transfer_money(
     except Exception:
         session.rollback()
         raise
+
+
+def calculate_total_funds(session: Session) -> float:
+    repo = AccountRepository(session)
+    return repo.total_funds()
