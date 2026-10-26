@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Literal
+from typing import Literal, Self
 
 AccountStatus = Literal["active", "blocked", "closed"]
 
@@ -29,7 +29,7 @@ class CustomResource:
     def __init__(self) -> None:
         self.is_open: bool = False
 
-    def __enter__(self) -> CustomResource:
+    def __enter__(self) -> Self:
         self.is_open = True
         return self
 

@@ -4,8 +4,9 @@ import csv
 import json
 from collections.abc import Iterable
 from pathlib import Path
+from typing import cast
 
-from application.models import Account
+from application.models import Account, AccountStatus
 
 
 def export_order(order: dict, path: Path | str) -> None:
@@ -50,8 +51,12 @@ def import_accounts_csv(path: Path | str) -> list[Account]:
             acc_num = row.get("account_number", "").strip()
             client_id = (row.get("client_id") or row.get("client") or "").strip()
             balance = float(row.get("balance", "0"))
-            status = row.get("status", "active").strip().lower() or "active"
+            raw_status = (row.get("status") or "active").strip().lower()
+            status: AccountStatus = cast(
+                AccountStatus,
+                raw_status if raw_status in {"active", "blocked", "closed"} else "active",
+            )
             accounts.append(
                 Account(account_number=acc_num, client_id=client_id, balance=balance, status=status)
-            )  # type: ignore[arg-type]
+            )
     return accounts
