@@ -1,11 +1,16 @@
 from __future__ import annotations
 
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from application.models import Account, BankingError
 from application.repositories import FakeRepository, InMemoryAccountRepository
-from application.services import AsyncLedgerClient, BankingService, Notifier
+from application.services import (
+    AsyncLedgerClient,
+    AsyncService,
+    BankingService,
+    Notifier,
+)
 from bank_catalog.models import AccountEntity
 from bank_catalog.repositories import AccountRepository
 from bank_catalog.services import BankService
@@ -118,3 +123,21 @@ def test_fake_repository_crud() -> None:
     assert len(fake_repo.list_all()) == 1
     assert fake_repo.delete("UA777") is True
     assert fake_repo.get_by_id("UA777") is None
+
+
+@patch("application.services.send_email")
+def test_service(mock_send: MagicMock) -> None:
+    import application.services as app_services
+
+    app_services.send_email("test@example.com", "Order created")
+    mock_send.assert_called_once_with("test@example.com", "Order created")
+
+
+@pytest.mark.anyio
+async def test_async_service() -> None:
+    repository = AsyncMock()
+    repository.get.return_value = {"id": 1}
+    service = AsyncService(repository)
+    result = await service.load(1)
+    assert result == {"id": 1}
+    repository.get.assert_awaited_once_with(1)

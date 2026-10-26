@@ -25,3 +25,12 @@ def test_percentage_discount(percent: float, expected: float) -> None:
 def test_invalid_discount(percent: float) -> None:
     with pytest.raises(ValueError):
         PercentageDiscount(percent)
+
+
+def test_discount_weak() -> None:
+    PercentageDiscount(10).apply(Money(100))
+
+
+def test_discount_strong() -> None:
+    result = PercentageDiscount(10).apply(Money(100))
+    assert result.amount == pytest.approx(90)

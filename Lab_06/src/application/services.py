@@ -22,6 +22,18 @@ def classify_account_balance(balance: float) -> str:
     return "basic"
 
 
+def send_email(email: str, message: str) -> None:
+    pass
+
+
+class AsyncService:
+    def __init__(self, repository: object) -> None:
+        self.repository = repository
+
+    async def load(self, item_id: int | str) -> object:
+        return await self.repository.get(item_id)  # type: ignore[attr-defined]
+
+
 class Notifier(Protocol):
     def notify(self, message: str) -> None: ...
     def send(self, message: str) -> None: ...

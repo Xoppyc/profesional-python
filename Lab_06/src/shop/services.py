@@ -33,3 +33,12 @@ class CheckoutService:
         payment_id = self._gateway.pay(cart.total)
         self._notifier.send(email, f"Payment successful: {payment_id}")
         return payment_id
+
+
+class AsyncPaymentStatus:
+    def __init__(self, client: object) -> None:
+        self._client = client
+
+    async def get_status(self, payment_id: str) -> str:
+        data = await self._client.fetch_status(payment_id)  # type: ignore[attr-defined]
+        return str(data["status"])

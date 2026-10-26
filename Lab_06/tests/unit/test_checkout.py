@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from unittest.mock import Mock
+from unittest.mock import AsyncMock, Mock
 
 import pytest
 from shop.config import get_payment_mode
 from shop.models import Cart
 from shop.protocols import Notifier, PaymentGateway
-from shop.services import CheckoutService, PaymentError
+from shop.services import AsyncPaymentStatus, CheckoutService, PaymentError
 
 
 def test_checkout_success(cart: Cart) -> None:
@@ -57,3 +57,22 @@ def test_payment_mode_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
 def test_default_payment_mode(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("PAYMENT_MODE", raising=False)
     assert get_payment_mode() == "sandbox"
+
+
+@pytest.mark.anyio
+async def test_payment_status() -> None:
+    client = AsyncMock()
+    client.fetch_status.return_value = {"status": "paid"}
+    service = AsyncPaymentStatus(client)
+    result = await service.get_status("PAY-001")
+    assert result == "paid"
+    client.fetch_status.assert_awaited_once_with("PAY-001")
+
+
+@pytest.mark.anyio
+async def test_payment_status_error() -> None:
+    client = AsyncMock()
+    client.fetch_status.side_effect = ConnectionError("Network error")
+    service = AsyncPaymentStatus(client)
+    with pytest.raises(ConnectionError):
+        await service.get_status("PAY-001")
